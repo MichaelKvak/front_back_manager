@@ -1,23 +1,20 @@
 <template>
   <div id="app">
-      <div>
-         <router-link to="/">Home</router-link>
-         <router-link to="/edit">New task</router-link>
-      </div>
-      <div>
-        <router-view></router-view>
-      </div>
+    <div>
+      <router-link to="/">Home </router-link>
+      <router-link to="/edit">New task</router-link>
+    </div>
+    <div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
-
-  }
-}
+  name: "App",
+  components: {},
+};
 </script>
 
 <style>
