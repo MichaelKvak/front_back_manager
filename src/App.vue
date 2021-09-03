@@ -2,7 +2,7 @@
   <div id="app">
     <div>
       <router-link to="/">Home </router-link>
-      <router-link to="/edit">New task</router-link>
+      <router-link to="/edit/">New task</router-link>
     </div>
     <div>
       <router-view></router-view>

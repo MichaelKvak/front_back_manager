@@ -13,7 +13,7 @@
           <input type="number" v-model.number="taskPriority" />
         </label>
         <div>
-            <button @click="onSave" :disabled="!isDataValid">Save</button>
+            <button @click="onSave" :disabled="!isDataValid">{{saveBtnTitle}}</button>
         </div>
         <div v-if="errorMessage">{{errorMessage}}</div>
     </div>
@@ -37,22 +37,49 @@ import { mapActions, mapGetters } from "vuex";
             ...mapGetters(['isLoading','hasError']),
             isDataValid(){
                 return this.taskTitle&&(this.taskPriority>=1&&this.taskPriority<=10)
+            },
+            isEditing(){
+                return !!this.$route.params.id
+            },
+            saveBtnTitle(){
+                return this.isEditing?'Save':'Create'
             }
         },
 
         methods: {
-            ...mapActions(['createTask']),
+            ...mapActions(['createTask','getTaskById','updateTask']),
             async onSave() {
                 this.errorMessage=''
                 try{
-                    await this.createTask({ 
-                        taskTitle:this.taskTitle, 
-                        taskPriority :this.taskPriority
-                    })
+                    if(this.isEditing){
+                        await this.updateTask({ 
+                            taskTitle:this.taskTitle, 
+                            taskPriority :this.taskPriority
+                        })
+                    }
+                    else{
+                        await this.createTask({ 
+                            taskTitle:this.taskTitle, 
+                            taskPriority :this.taskPriority
+                        })
+                    }
                     this.$router.push({name:'home'})
                 }
                 catch{
                     this.errorMessage='Saving error'
+                }
+            }
+        },
+
+        async mounted () {
+            if(this.isEditing){
+                try{
+                    const editedObj=await this.getTaskById(this.$route.params.id)
+                    this.taskTitle=editedObj.title
+                    this.taskPriority=editedObj.priority
+                }
+                catch{
+                    this.errorMessage='Fetching edited object error'
                 }
             }
         },
